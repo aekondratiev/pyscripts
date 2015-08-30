@@ -17,21 +17,27 @@ class bcolors:
     UNDERLINE = '\033[4m'
 
 
+class settings:
+    domain_zone = '.ru'
+    domain_level = 2
+    domain_symbols = 'qwertyuiopasdfghjklzxcvbnm123456789'
+    f = open('domains_found.txt', 'a')
+
+
 def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
-domain_zone = '.ru'
-domain_level = 2
-domain_symbols = 'qwertyuiopasdfghjklzxcvbnm123456789'
-f = open('domains_found.txt', 'a')
 
-while True:
-    query_name=(id_generator(domain_level, domain_symbols))
-    try:
-        domain = whois.query(query_name+domain_zone)
-        print(bcolors.FAIL + "Taken " + domain.name + bcolors.ENDC)
-    except Exception:
-        print(bcolors.OKGREEN + "FREE " + query_name + domain_zone + bcolors.ENDC)
-        f.write(query_name + domain_zone + '\n')
-    time.sleep(2)
+def dispatcher():
+    while True:
+        query_name=(id_generator(settings.domain_level, settings.domain_symbols))
+        try:
+            domain = whois.query(query_name+settings.domain_zone)
+            print(bcolors.FAIL + "Taken " + domain.name + bcolors.ENDC)
+        except Exception:
+            print(bcolors.OKGREEN + "FREE " + query_name + settings.domain_zone + bcolors.ENDC)
+            settings.f.write(query_name + settings.domain_zone + '\n')
+        time.sleep(2)
+
+dispatcher()
 
