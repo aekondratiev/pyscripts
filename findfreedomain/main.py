@@ -13,8 +13,8 @@ __author__ = 'andry.kondratiev@gmail.com'
 
 
 def signal_handler(signal, frame):
-        print('You pressed Ctrl+C - exit now')
-        sys.exit(0)
+    print('You pressed Ctrl+C - exit now')
+    sys.exit(0)
 
 
 def generator(size=6, chars=string.ascii_uppercase + string.digits):
