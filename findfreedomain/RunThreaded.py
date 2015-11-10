@@ -12,12 +12,17 @@ import sys
 
 from AsyncResolver import AsyncResolver
 from Settings import Settings
+from ConsoleColors import ConsoleColors
+ConsoleColors = ConsoleColors()
 Settings = Settings()
+
+# You have exceeded allowed connection rate
 
 print_lock = threading.Lock()
 
 # Create the queue and threader
 queue = Queue()
+
 
 # Функция для отлова сигнала
 def signal_handler(signal, frame):
@@ -49,10 +54,12 @@ def dispatcher(worker):
                 # домен в файл
                 try:
                     domain = whois.query(host)
-                    print("\033[96m%s taken, expiration date %s" % (host, domain.expiration_date))
-                except Exception:
-                    print("\033[91mFREE " + host + "\033[0m")
+                    print("%s%s taken, expiration date %s%s" % (ConsoleColors.OKBLUE, host, domain.expiration_date, ConsoleColors.ENDC))
+                except AttributeError:
+                    print("%sFREE %s%s" % (ConsoleColors.OKGREEN, host, ConsoleColors.ENDC))
                     Settings.domainsFoundFile.write(host + '\n')
+                except Exception:
+                    print("%sERROR on %s: whois - You have exceeded allowed connection rate%s" % (ConsoleColors.FAIL, host, ConsoleColors.ENDC))
                 time.sleep(2)
 
 
